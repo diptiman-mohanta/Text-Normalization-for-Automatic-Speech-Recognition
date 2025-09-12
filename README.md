@@ -15,10 +15,10 @@ tagging is to assign a tag to each input word in the spoken domain sentence so t
 ### Proposed Approach:
 - Initial data: To train this model they alighedn the GTN dataset. The GTN dataset consists of
 unnormalized (i.e. written form) and normalized (i.e. spoken form) sentence pairs that are aligned on a phrase-level. To get  amonotonic one to one correspondence between each spoken word and corresponding fragments in writtten from the dataset is alligned into more granular level.
-- Alignment: All corresponding phrases are extracted to create a parallel corpus for each semiotic class. Used Giza++ for this allignment. To do this alignment they tokenize the data first The spoken text istokenized by word boundary, while the written part is tokenized as follows: 1) All alphabetic sequences are separate tokens, 2) In numeric sequences each character is a separate token. 3) All non-alphanumeric characters are separate tokens. Additionally, we add an underscore symbol to mark the beginning and end of a sequence for future detokenization. For example, "jan 30,2005" is tokenized as "_jan_ _3 0 , 2 0 0 5_". Then they joined thogether the character token in the written part that are aligned to the same spoken input word. If a spoken input word aligns to nothing, we add a "<DELETE>" tag.
+- Alignment: All corresponding phrases are extracted to create a parallel corpus for each semiotic class. Used Giza++ for this allignment. To do this alignment they tokenize the data first The spoken text istokenized by word boundary, while the written part is tokenized as follows: 1) All alphabetic sequences are separate tokens, 2) In numeric sequences each character is a separate token. 3) All non-alphanumeric characters are separate tokens. Additionally, we add an underscore symbol to mark the beginning and end of a sequence for future detokenization. For example, "jan 30,2005" is tokenized as "_jan_ _3 0 , 2 0 0 5_". Then they joined thogether the character token in the written part that are aligned to the same spoken input word. If a spoken input word aligns to nothing,  added a **DELETE** tag.
 - Non-Monotonic alignment: One important restriction of the tagger mode is that spoken and written pairs are assumed to be monotonically aligned. Most of the spoken-written pairs in the dataset satisfy the requirement. Detected the non-monotonic examples and discarded them.
-- Tag Vocabulary and Training Dataset: The alignment procedure splits the written sentences into fragme ts and align them one-to-one to be spoken form. Then count the frequencies of such written fragments and include some predefinec number of the most frequent of them in the tag vocabulary.  "<SELF>"and"<DELETE>"tags are also added to the tag vocabularies to signify that an input token should be either copied or deleted. The tagger model sees the whole sentence to make context dependent decisions. All input tokens outside ITN spans are mapped to"<SELF>"tags during data set creation.
-- Post Processing: To get the final output applied a simple post processing procedure. specifically substituted  "<SELF>"tokens with input words,remove"<DELETE>" tokens, move tokens that have movements encoded in tags, and, finally, remove spaces between fragments bordered with under score symbols.
+- Tag Vocabulary and Training Dataset: The alignment procedure splits the written sentences into fragme ts and align them one-to-one to be spoken form. Then count the frequencies of such written fragments and include some predefinec number of the most frequent of them in the tag vocabulary.  **SELF** and **DELETE** tags are also added to the tag vocabularies to signify that an input token should be either copied or deleted. The tagger model sees the whole sentence to make context dependent decisions. All input tokens outside ITN spans are mapped to **SELF** tags during data set creation.
+- Post Processing: To get the final output applied a simple post processing procedure. specifically substituted  **SELF** tokens with input words,remove **DELETE** tokens, move tokens that have movements encoded in tags, and, finally, remove spaces between fragments bordered with under score symbols.
 
 ### Experiments:
 - As baseline Duplex Text Normalization model is used to compare with the proposed model.
@@ -33,7 +33,8 @@ unnormalized (i.e. written form) and normalized (i.e. spoken form) sentence pair
 
 ### Error Analysis
 
-- Mostly from corpus alignment issues, e.g., digit duplications ("twelve thousand seventy one" → "120071" instead of "12071") and ("five million croatian kuans"→ "5 million million czk" instead of "5 million hrk" as on of the cause is hrk tag is too rare in the dictionary)
+Mostly from corpus alignment issues, e.g., digit duplications ("twelve thousand seventy one" → "120071" instead of "12071") and ("five million croatian kuans"→ "5 million million czk" instead of "5 million hrk" as on of the cause is hrk tag is too rare in the dictionary)
+
 ---
 ## Paper 2: A unified transformer-based framework for duplex test normalization
 
@@ -60,4 +61,15 @@ Achieves SOTA sentence-level accuracy on Google TN dataset (EN: TN 98.36%, ITN 9
 
 ### Error Analysis
 
-manually analyzed the errors made by English duplex system for TN. Among 7551 test instances, our model makes mistakes in 124 cases(1.64%). However, 113 of the cases are acceptable errors, and only 11 cases(0.146%)are unrecoverable errors. Among the 11 unrecoverable errors, seven are related to URLs, three are related to numbers,and one is miscellaneous.
+They havemanually analyzed the errors made by English duplex system for TN. Among 7551 test instances, our model makes mistakes in 124 cases(1.64%). However, 113 of the cases are acceptable errors, and only 11 cases(0.146%)are unrecoverable errors. Among the 11 unrecoverable errors, seven are related to URLs, three are related to numbers,and one is miscellaneous.
+
+---
+
+## Paper 3: RNN Approaches to Text Normalization: A challenge
+
+- Authors: Richard Sproat and Navdeep Jaitly
+- They done the experiment with RNN architectures on the GTN dataset, showing high overall accuracy but problematic errors, and suggest hybrids with finite-state transducers (FSTs) for mitigation.
+- This paper is foundational, as it released the GTN dataset (now widely used, e.g., in Thutmose Tagger and Duplex frameworks) and highlighted RNN limitations in TN/ITN, inspiring later tagging and hybrid approaches.
+
+### Exp 1: Text normalization using LSTMs
+
