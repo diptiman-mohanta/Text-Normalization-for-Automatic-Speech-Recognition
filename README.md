@@ -65,11 +65,28 @@ They havemanually analyzed the errors made by English duplex system for TN. Amon
 
 ---
 
-## Paper 3: RNN Approaches to Text Normalization: A challenge
+## Paper 3: What is lost in Normalization? Exploring Pitfalls in Multilingual ASR Model Evaluations
 
-- Authors: Richard Sproat and Navdeep Jaitly
-- They done the experiment with RNN architectures on the GTN dataset, showing high overall accuracy but problematic errors, and suggest hybrids with finite-state transducers (FSTs) for mitigation.
-- This paper is foundational, as it released the GTN dataset (now widely used, e.g., in Thutmose Tagger and Duplex frameworks) and highlighted RNN limitations in TN/ITN, inspiring later tagging and hybrid approaches.
+- Authors: Kavya Manohar, Leena G Pillai, and Elizabeth Sherly
+- This paper is critically examines the evaluation of multilingual Automatic Speech Recognition (ASR) models, with a strong emphasis on Indic language scripts (e.g., Hindi, Tamil, Malayalam).
+- The core argument is that current text normalization practices—intended to standardize ASR outputs for fair performance metrics like Word Error Rate (WER)—are flawed for non-Latin scripts, leading to distorted text representations and artificially inflated performance scores on benchmarks.
+- A proper text normalization routine is required to minimize penalization of non-semantic differences by aligning the predicted output more closely with the ground truth.
 
-### Exp 1: Text normalization using LSTMs
+### Background and Related works
+- Most ASR systems were trained on normalized text transcripts and produced output without punctuation and casing. Wisper gives output as UTF-8 text, requiring a comprehensive normalization process to accurately evaluate its performance. This ensure that the evaluation metric, WER penalizes only actual word mis-transcriptions, not formatting or punction differences.
+- Wishpers normalization routine for english extends beyond basic casing and punctuation, incorporating transfromation such as converting contracted abbreviation to expanded forms and expanding currency symbols.
+- this type of approach requires a language-specifiv set of transformation for non english text. Due to the lack of linguistic knowledge to develop such normalization it relies on a basic data driven approach and this inadvertently removes the vowel signs(matras). and these vowles signs are essential for correct word formation and pronounciation.
+
+### Methodology
+
+#### Analysis of Text Similarity after Whisper Normalization
+- For emirircally assesment the impact of normalization different language they selected Latin script (English and Finnish), Indic scripts(Hindi, Tamil, and Malayalam), and South East Asian scripts (Thai).
+- The METEOR score was employed to quantify the similarity between the original and normalized sentences.
+- The score obtained are English=0.97, Finnish=0.95, Hindi=0.38, Tamil, Malayalam, and Thai = 0.00.
+
+#### Impact of Whisper Normalization on WER
+- To empirically analyze the impact of the normalization on the WER, the result of evaluation the orginal whisper small mode, reffread to as the baseline model, with and without the application of whisper's normalization on the test split of Google Multilingual speech dataset.
+- The WER of the baseline model is significantly high for language other than English and Finnish with value of 86.95% for hindi, 93.3% for tamil and 287.4% for Malayalam.
+- While the application of the Whisper's normalization results in modest WER improvements for English and Finnish, with an absolute reduction of 5.1% and 3.2% respectively, Indic language experience suspicious absolute WER reductions: 21.9% for Hindi, 41.5% for Tamil and a substantial 152.2% for Malayalam.
+- Due to this poor perfomance they conducted a further comparision of WER with and without Whisper's normalization on publicly availabe model that have been derieved from the baseline model after language-specific fine tuning. This improved the performance of the Hindi, Tamil and malayalam model with the absolute reduction in WER with the decrease of 10.7% for Hindi, 21.3% for Tamil and 34.1% of Malayalam.
 
