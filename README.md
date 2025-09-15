@@ -90,3 +90,29 @@ They havemanually analyzed the errors made by English duplex system for TN. Amon
 - While the application of the Whisper's normalization results in modest WER improvements for English and Finnish, with an absolute reduction of 5.1% and 3.2% respectively, Indic language experience suspicious absolute WER reductions: 21.9% for Hindi, 41.5% for Tamil and a substantial 152.2% for Malayalam.
 - Due to this poor perfomance they conducted a further comparision of WER with and without Whisper's normalization on publicly availabe model that have been derieved from the baseline model after language-specific fine tuning. This improved the performance of the Hindi, Tamil and malayalam model with the absolute reduction in WER with the decrease of 10.7% for Hindi, 21.3% for Tamil and 34.1% of Malayalam.
 
+---
+## Mark My Words: A Robust Multilingual Model for punctuation in Test and Speech Transcripts
+- Authors: 2025
+- Punctuation plays a vital role in structuring meaning to a text or speech.
+- In this model, they introduced cadence, a generalist punctuationt restoration model adapted from pretrained LLMs.
+- Cadence is designed to handel both clean written test and highly spontaneous spoken trasnscripts. It surpasses the previous SOTA in performance while expanding support from 14 to all 22 Indian Language and English.
+- Indic languages face a substantail hurdles. They include scarcity of annoted corpora, especially for low-resources languages and linguistic complexity with diverse scripts, grammars and unique marks. To bridge this gap for Indic Languages, they constucted a diverse multilingual punctuation corpus covering both written and ASR-transcribed text.
+- This corpus is aggregated from multiple sources, including Sangraha-verified, IndicVoices, TranslatedCosmopedia and IndicCorp-v2. They adopted Geema3-1B-pretrained model for punctuation restoration by converting it into a bidirectional transformer using a masked next token prediction.
+- This model support English and all 22 scheduled languages of India.
+
+### Methodology
+
+#### Data Strategy for multilingual punctuation restoration.
+- For intial continual pre training phase, they leverage large-scale high-quality multilingual web corpora. These resources are selected for their broad linguistic coverage, providing the model with exposure to a wide arrey of languages and writting styles.
+- To prepare the model specifically for punctuation restoration, they construct a substantial and hetrogenious finetuning dataset through a significant data aggregation efforts.
+
+#### Model training and Adoptation
+- Started with pre-trained transformerbased language model these are deighend for unidirectional text generation processing context only from preceding token. For sequence tagging task like punctuation restoration bidirectional infromation flow is highly benificial and adopted a model's attention mechanism to be fully bidirectional.
+- Instead of conventioal masked language modeling, they used a Masked Next Token Prediction. In this modified setup, a random subset of tokens in an input sequence is masked. The model's predictive task is then specifically focused: for an unmaksed token at the position *i* if its subsequent token position is *i*+1 is the maksed, the mode is trained to predict this masked token *i*+1.  This prediciton is prefromed using the contextual representation of the token at position *i*.
+- Initially trained on a high resources language to establish a robust foundational representations. Then this model is exposed to a mid resouces language which allowed the model to begin generalizing across the related linguistic structures and benifit from these larger datasets. Then low resources languages are introduced which encouraged knowlege transfer from the more data rich languages learned in the previous phase and achieved good performance on low data languages. Then model is trained on a mixture of datas from all supported languages.
+- Then the model is finetuned specifically for the punctuation restoration task using amalgamated dataset described earlier.
+
+### Results
+- Achieved an overall socre of 0.7924 on written text and 0.6249 on spontaneous speech transcripts. On complete set of 30 supported punctuation labels it achived overall score of 0.5931 on written text and 0.4508 on spontaneous speech transcripts.
+
+---
