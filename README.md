@@ -92,7 +92,7 @@ They havemanually analyzed the errors made by English duplex system for TN. Amon
 
 ---
 ## Mark My Words: A Robust Multilingual Model for punctuation in Test and Speech Transcripts
-- Authors: 2025
+- Authors: Sidharth Pulipaka, Sparsh Jain, Ashwin Shankar, Raj Dabre
 - Punctuation plays a vital role in structuring meaning to a text or speech.
 - In this model, they introduced cadence, a generalist punctuationt restoration model adapted from pretrained LLMs.
 - Cadence is designed to handel both clean written test and highly spontaneous spoken trasnscripts. It surpasses the previous SOTA in performance while expanding support from 14 to all 22 Indian Language and English.
