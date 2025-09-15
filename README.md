@@ -116,3 +116,19 @@ They havemanually analyzed the errors made by English duplex system for TN. Amon
 - Achieved an overall socre of 0.7924 on written text and 0.6249 on spontaneous speech transcripts. On complete set of 30 supported punctuation labels it achived overall score of 0.5931 on written text and 0.4508 on spontaneous speech transcripts.
 
 ---
+
+## Paper 5:indic-punct: An automatic punctuation restoration and inverse text normalization framework for Indic languages
+- Author: Anirudh Gupta, Neeraj Chhimwal, Ankur Dhuriya, Rishabh Gaur, Priyanshi Shah, Harveen Singh Chadha, Vivek Raghavan
+- ASR generates text which is most of the time devoid of any punctuations.
+- An approach for automatic punctuation of textt using a pretrained IndicBERT model. Inverse text normalization is done by hand writting weighted finite state transducer grammer.
+- Developed this tool for 11 Indian languages.
+- Prior approaches to automatic punctuation have used lexical anf prodsody features or a combination of both.
+
+### Framework Parts
+- Contains two parts: Punctuation restoration and Inverse Text Normalization
+
+#### Inverse Text Normalization
+- classify: It creates a linear automation from the input string and composes it with the final classification WFST, which transduces numbers and inserts semantic tags.
+- Parse: Parsed the tagged string into a list of key value items representing  the different semiotic tokens.
+- Generate recording: It is a generator function which takes the parsed token and generated string serialization with different reordering of the key value items.
+- Verbalize: It takes the intermediate string representatuon and compose it eiht the final verbalization WFST.
