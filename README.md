@@ -132,3 +132,10 @@ They havemanually analyzed the errors made by English duplex system for TN. Amon
 - Parse: Parsed the tagged string into a list of key value items representing  the different semiotic tokens.
 - Generate recording: It is a generator function which takes the parsed token and generated string serialization with different reordering of the key value items.
 - Verbalize: It takes the intermediate string representatuon and compose it eiht the final verbalization WFST.
+
+#### Punctuation Restoration
+- Dataset Preperation: Used IndicCorp dataset and created a own training data by filtering out line wich containes some punctuations(considered 3 punctuation for all the languages sentence end, comma and question mark). Lines are normalised using IndicNLP. Removal of words of other languages.Once clean text are obtained line of the test are prepared for data loading.
+- Model Architecture and Training: They posed as this an token classification tast and used IndicBERT for that downstreaming task.
+
+### Results 
+Calculated macro F1 score across labels for all languages and the score vary from 0.77-0.86 for all languages.
