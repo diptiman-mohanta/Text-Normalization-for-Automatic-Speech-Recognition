@@ -153,6 +153,14 @@ Calculated macro F1 score across labels for all languages and the score vary fro
 - Evaluate using for (WER,CER,SER).
 ---
 ## Dataset preparation
+- We already have an main directory and inside it have many different folder each folder have some audio files named like this `IISc_RESPIN_hi_D1_40020_251001_F_AGRI_400208_40207448` and an text file which contains its ground truth like this : `IISc_RESPIN_hi_D1_40020_251001_F_BANK_401129_40200343 हाइब्रिड के मामलों में कफी मात्रा में ब्याज की वापसी भी की जाती है` `IISc_RESPIN_hi_D1_40020_251001_F_AGRI_400208_40207448 क्रेप चमेली अपनी खुसबू के लिए प्रसिद्ध है` `IISc_RESPIN_hi_D1_40020_251001_F_AGRI_403379_40207717 एक एकड़ में कितना पोटाश डालना चाहिए ?`.
+- created a structured JSON `dataset_all.json` with `(audio_path, transcript)` pairs using this `datasetprep.ipynb` code.
+---
+## Dataset splitting
+- We will split the training dataset for 80-10-10 for train `train.json`, validation`valid.json`, and test files`test.json`.
 
-- We have already have an main directory and inside it have many different folder each folder have some audio files named like this `IISc_RESPIN_hi_D1_40020_251001_F_AGRI_400208_40207448` and an text file which contains its ground truth like this : `IISc_RESPIN_hi_D1_40020_251001_F_BANK_401129_40200343 हाइब्रिड के मामलों में कफी मात्रा में ब्याज की वापसी भी की जाती है` `IISc_RESPIN_hi_D1_40020_251001_F_AGRI_400208_40207448 क्रेप चमेली अपनी खुसबू के लिए प्रसिद्ध है` `IISc_RESPIN_hi_D1_40020_251001_F_AGRI_403379_40207717 एक एकड़ में कितना पोटाश डालना चाहिए ?`.
-- created a structured JSON `dataset_all.json` with `(audio_path, transcript)` pairs using this code `datasetprep.ipynb`.
+---
+## Preprocessing
+- Converted all audio into a consistent format (e.g., 16 kHz, mono, WAV) using `preprocessing.ipynb`.
+
+
