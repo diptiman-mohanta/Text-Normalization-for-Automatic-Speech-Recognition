@@ -1,5 +1,6 @@
 # Text-Normalization-for-Automatic-Speech-Recognition
 
+# Date: 12 Sept 2025 
 ---
 ## Paper 1: Thutmose Tagger: Single-pass neural model for Inverse Text Normalization
 
@@ -35,6 +36,7 @@ unnormalized (i.e. written form) and normalized (i.e. spoken form) sentence pair
 
 Mostly from corpus alignment issues, e.g., digit duplications ("twelve thousand seventy one" → "120071" instead of "12071") and ("five million croatian kuans"→ "5 million million czk" instead of "5 million hrk" as on of the cause is hrk tag is too rare in the dictionary)
 
+# Date: 13 Sept 2025 
 ---
 ## Paper 2: A unified transformer-based framework for duplex test normalization
 
@@ -90,6 +92,7 @@ They havemanually analyzed the errors made by English duplex system for TN. Amon
 - While the application of the Whisper's normalization results in modest WER improvements for English and Finnish, with an absolute reduction of 5.1% and 3.2% respectively, Indic language experience suspicious absolute WER reductions: 21.9% for Hindi, 41.5% for Tamil and a substantial 152.2% for Malayalam.
 - Due to this poor perfomance they conducted a further comparision of WER with and without Whisper's normalization on publicly availabe model that have been derieved from the baseline model after language-specific fine tuning. This improved the performance of the Hindi, Tamil and malayalam model with the absolute reduction in WER with the decrease of 10.7% for Hindi, 21.3% for Tamil and 34.1% of Malayalam.
 
+# Date: 15 Sept 2025 
 ---
 ## Mark My Words: A Robust Multilingual Model for punctuation in Test and Speech Transcripts
 - Authors: Sidharth Pulipaka, Sparsh Jain, Ashwin Shankar, Raj Dabre
@@ -143,6 +146,7 @@ Calculated macro F1 score across labels for all languages and the score vary fro
 ---
 # Trying existing normalisation methods on both train and test transcripts and analyse ASR performance with and without normalisation
 
+# Date: 18 Sept 2025 
 ---
 ## Steps
 - Data Preparation: Alight the audio file and transcript pairs.
@@ -152,11 +156,10 @@ Calculated macro F1 score across labels for all languages and the score vary fro
 - Use a pretrained model.
 - Evaluate using for (WER,CER,SER).
 ---
-## Dataset preparation
+## Dataset preparation 
 - We already have an main directory and inside it have many different folder each folder have some audio files named like this `IISc_RESPIN_hi_D1_40020_251001_F_AGRI_400208_40207448` and an text file which contains its ground truth like this : `IISc_RESPIN_hi_D1_40020_251001_F_BANK_401129_40200343 हाइब्रिड के मामलों में कफी मात्रा में ब्याज की वापसी भी की जाती है` `IISc_RESPIN_hi_D1_40020_251001_F_AGRI_400208_40207448 क्रेप चमेली अपनी खुसबू के लिए प्रसिद्ध है` `IISc_RESPIN_hi_D1_40020_251001_F_AGRI_403379_40207717 एक एकड़ में कितना पोटाश डालना चाहिए ?`.
 - created a structured JSON `dataset_all.json` with `(audio_path, transcript)` pairs using this `datasetprep.ipynb` code.
 ---
 ## Dataset splitting
 - Splitting the training dataset for 80-10-10 for train `train.json`, validation`valid.json`, and test files`test.json`.
- 
-
+---
