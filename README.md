@@ -158,12 +158,5 @@ Calculated macro F1 score across labels for all languages and the score vary fro
 ---
 ## Dataset splitting
 - We will split the training dataset for 80-10-10 for train `train.json`, validation`valid.json`, and test files`test.json`.
-
----
-## Preprocessing
-- Converted all audio into a consistent format (e.g., 16 kHz, mono, WAV) using `preprocessing.ipynb`.
-
-## Use of Pretrained model
-- Use pretrained model to evaluate the
-- 
+ 
 
