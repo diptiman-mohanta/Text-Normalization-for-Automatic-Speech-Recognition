@@ -149,7 +149,7 @@ Calculated macro F1 score across labels for all languages and the score vary fro
 - Dataset splitting
 - Copy a pair for raw transcripts (with out normalisation)
 - Apply normalization to create the normalised version.
-- Train own asr model or use a pretrained model.
+- Use a pretrained model.
 - Evaluate using for (WER,CER,SER).
 ---
 ## Dataset preparation
