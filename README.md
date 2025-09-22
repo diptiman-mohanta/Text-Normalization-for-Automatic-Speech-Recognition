@@ -157,6 +157,6 @@ Calculated macro F1 score across labels for all languages and the score vary fro
 - created a structured JSON `dataset_all.json` with `(audio_path, transcript)` pairs using this `datasetprep.ipynb` code.
 ---
 ## Dataset splitting
-- We will split the training dataset for 80-10-10 for train `train.json`, validation`valid.json`, and test files`test.json`.
+- Splitting the training dataset for 80-10-10 for train `train.json`, validation`valid.json`, and test files`test.json`.
  
 
