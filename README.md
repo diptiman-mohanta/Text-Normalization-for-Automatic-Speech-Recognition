@@ -162,4 +162,8 @@ Calculated macro F1 score across labels for all languages and the score vary fro
 ---
 ## Dataset splitting
 - Splitting the training dataset for 80-10-10 for train `train.json`, validation`valid.json`, and test files`test.json`.
+- As i am using pretrained ASR models directly used `dataset_all.json` to test the models.
 ---
+# Date: 22 sept 2025
+
+Evaluated ASR perfomance on the Test dataset using different pretrained ASR model like `indicwav2vec-hindi`,`Wav2Vec2-large-xlsr-hindi`,`vakyansh-wav2vec2-hindi-him-4200`, and `wav2vec2-large-xlsr-53` using the code `nonormalization.py` and all the results are stored in `Without Normalization Results` directory.
