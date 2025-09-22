@@ -163,4 +163,7 @@ Calculated macro F1 score across labels for all languages and the score vary fro
 ## Preprocessing
 - Converted all audio into a consistent format (e.g., 16 kHz, mono, WAV) using `preprocessing.ipynb`.
 
+## Use of Pretrained model
+- Use pretrained model to evaluate the
+- 
 
