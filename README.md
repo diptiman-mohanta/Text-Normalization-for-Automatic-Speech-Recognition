@@ -287,6 +287,45 @@ Use publicly availabe dataset from various domains as well as additional set spe
 | | TASK | 75 88 81 | 87 **85** 86 | 72 53 61 | 85 84 84 |
 | | **JOINT** | **78 88 83** | **88 84 86** | **73 56 63** | **86 83 85** |
 
+---
+
+## Paper 7: End-to-End joint puncutuated and normalized ASR with a limited amount of punctuated training data
+- Authors: Can Cui, Imran Sheikh, Mostafa Sadeghi, Emmanuel Vincent
+- Dataset used: LibriSpeech 
+- Transcribing speech into text with punctuation and casing has been active area of research in automatic speech recognition.
+- Joint punctuated and normalised ASR, which produces transcripts both with and without punctuation ans casing is highly desirable because it improves human readablity and it extends compatiblity with the NLP models that either exploits or discard punctuation information and if it simplify model deployment and maintance.
+- Conventional punctuated ASR approach post-processes normalized ASR output using a punctuation and case restoration model sich as modified recurrent neural network transducer ASR with a finetuned language model.
+- Some other alternative is end to end ASR, which is directly generated punctuated transcripts. these modes are less accurate in word recognition that equal-sized normalized ASR models, leading to poorer normalized ASR perfomance and increased computation time for output normalization.
+- This paper proposes an E2E joint punctuated and normalized ASR system that is effiecient in both task , trainable with limited punctuated labeled data and suitable for streaming. Intoduced and compared two complementary approached to train a stateless transducer-based E2E joint punctuated and normalized ASR model.,
+- First approach uses an LM to generate punctuated trainig transcripts. As such LMs may not be accurate enough or availabe for certain domains. So a second approach is proposed in which a single decoder is conditioned on the type of output.
+
+### Preliminary of stateless transducer-based punctuated ASR
+- An E2E punctuated ASR system transcribe speech into a punctuated transcripts.
+- Given an acoustic feature sequence  $$X \in \mathbb{R}^{L \times A}$$ , where L is the sequence length and A the feature dimension , the training objective is to maximize the probablity.
+- A stateless transducer-based E2E ASR system, which uses RNN-T framework with a stateless prediction network can be readily extended to the punctuated transcription task, a stateless transformer encoder with downsampling and a zip like structure further enhance efficiency while maintaining accuracy.
+
+### Proposed Methods
+
+#### 2-Decoder joint normalized ASR
+- An ASR system with two decoders, each consisting of its own predictor and joiner. using the output of the same encoder these two decoder generate the punctuated and normalized transcripts.
+
+#### Training ASR using the auto-punctuated transcripts
+- Automatically generated punctuated transcripts of ASR training data can be used to train punctuated ASR model in the absence of human generated punctuated transcripts.
+- This work focus on punctuation and casing. This punctuation and case enhanced transcripts can directly obtained from normalized transcripts using the available SOTA punctuation and case restoration models.
+
+#### Conditioned predictor ASR
+- The drawbacks of the autopunctuated transcription driven ASR training approach presented above is that errors made by the punctuation and case prediction model may propagate into the ASR models.
+- In addition to this there are such cases and punctuation restoration model may not be accurate enough or even available for certain domains and or languages.
+- The proposed approach efficetively utilizes the small amount of punctuated training data and the large amount of normalized training data by using a single conditioned predictor to handle both punctuated and normalized transcription mode ID, which is an input that specifies wheather we want a normalized(N) or punctuated(P) output.
+-  The token embeddings are concatenated with the modes embedding before feeding them to the following predictor layers.
+-  The conditioned predictor ASR system uses same loss fucntion as decoder only part of the input samples will have a punctuated reference transcript ans will use the corresponding loss. This lead to difference between the both mofrl perfomance and the output modes and particularly poos performance of the pucntuated transcription mode.
+
+### Results
+- Achives a better perfomance on out of domain test data with upto 17% relative punctuation-case-aware word error rate reduction. 
+- The second approach use a single decoder conditioned on the type of output. This yeild a 42% relative PC-WER reduction comapred to whisper-base and 4% relative(normalized) wer reduction compared to the normalized output of a punctuated-only model.
+- This proposed model demonstates the feasiblity of a joint ASR system using a little as demonstates the feasiblity of a joint ASR system as little as 5% punctuated training data witha moderate(2.4% absolute) PC-WER increase.
+
+---
 # Trying existing normalisation methods on both train and test transcripts and analyse ASR performance with and without normalisation
 
 
