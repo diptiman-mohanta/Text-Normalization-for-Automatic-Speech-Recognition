@@ -325,6 +325,9 @@ Use publicly availabe dataset from various domains as well as additional set spe
 - The second approach use a single decoder conditioned on the type of output. This yeild a 42% relative PC-WER reduction comapred to whisper-base and 4% relative(normalized) wer reduction compared to the normalized output of a punctuated-only model.
 - This proposed model demonstates the feasiblity of a joint ASR system using a little as demonstates the feasiblity of a joint ASR system as little as 5% punctuated training data witha moderate(2.4% absolute) PC-WER increase.
 
+## Paper 8: Universal-2-TF: Robust All-Neural Text formatting for ASR
+
+
 ---
 # Trying existing normalisation methods on both train and test transcripts and analyse ASR performance with and without normalisation
 
