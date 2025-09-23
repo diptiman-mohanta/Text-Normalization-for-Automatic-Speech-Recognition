@@ -144,7 +144,151 @@ They havemanually analyzed the errors made by English duplex system for TN. Amon
 Calculated macro F1 score across labels for all languages and the score vary from 0.77-0.86 for all languages.
 
 ---
+# Date: 23 Sept 2025
+
+## Paper 6: Four-in-One: A joint approach to inverse test normalization, punctuation, capitalization and disfluency for Automatic Speech Recognition
+- Authors: Sharman Tan, Piyush Behre, Nick Kibre, Issac Alphonso, Shuangyu Chang
+- Converting ASR output into written from involves applying features such as inverse text normalization (ITN), Punctuation, capitalization and disfluency removal.
+- ITN formay entities such as number,dates, times, and addresses.
+- Introduced a novel stage approach to spokekn to written text conversion consisting of a single joint tagging model followed by a tag application stage.
+- Defined a text processing pipeline for spoken and written form public datasets to jointly predict token level ITN, Punctuation, capialization and disfluency tags, as described in section 3 and 4.
+
+### Proposed Method
+
+#### Joint labeling of ITN, Punctuation, Capitalizatiom amd disfluency
+- This adresses ASR fomatting as a multiple sequence labeling problem. First tokenize the spoken form text and then use a transformer encoder to learn a shared representation of the input.
+- Four task-specific classification heads-corresponding to ITN, Puncutation, capitalization and disfluency- predict four token level tag sequence from the shared representation.
+- Each classification head consists of a dropout layer followed by a fully connected layer. And Used the cross entropy loss function and jointly optimizes all four tasks by minimizing an evenly weighted combination of the lossws as shown in: $CE_{\text{joint}} = (CE_i + CE_p + CE_c + CE_d)/4$, where CE_i, CE_p, CE_c, CE_d are the cross entropy of function fot ITN, Punctuation, capitalization and disfluency respectively.
+
+#### Tag application
+- The Four tag sequences to format the spoken form ASR output as their writtenf form. As the tag sequences are token level, they are converted them into word-level for tag application.
+- To format the ITN entities, extracted each span of ITN token that are consecutively tagged as the same ITN entity type and span. Then applied WFST grammar for that entity type to generate the written form.
+- ITN formatting may change the no of words in the sequence so they preserved the alignments between the orginal spoken form tokens and formatted ITN entities. When multiple spoken-form token maps to a single WFST output, only applied the last punctuation tag and the first capitalization tag.
+- For puncutation appended the indicated punctions tags to the corresponding words.
+- For capitalization, they capitalize the first letter or entirety of word, as tagged.
+- To remove disfluencied they removed the disfluency tagged words from the text sequence.
+- compared both task specific and joint models for using four independent task specific models in the real scenarios may result in undesirable conflicts between features.
+
+### Data Processing Pipeline
+
+#### Dataset
+
+Use publicly availabe dataset from various domains as well as additional set specifically targeting ITN and disfluency:
+| Dataset | Distribution |
+| :--- | :--- |
+| OpenWebText | 22.8% |
+| Stack Exchange | 13.6% |
+| OpenSubtitles2016 | 3.3% |
+| MAEC | 2.9% |
+| NPR Podcast | 0.6% |
+| SwDA + SWB + Fisher | 0.3% |
+| Web-crawled ITN | 56.4% |
+| Conversational Disfluency | 0.1% |
+
+#### Data processing written form
+- Apart fro  SwDA, SWB, and fisher all corpora are written form text containing ITN, Punctuation and capitalization.
+- To jointly train a single model to predict the tag sequences corresponding to ITN, punctuation, captilization and disfluency, processed each of the set to contain token-level tags for each of the four tasks.
+- Filtern and cleaning the dataset by preserving natual sentence or paragraph as rows and removing characters apart from the alphanumeric, puncuation and necessary mid-word symbols such as hyphens.
+- To generate the spoken form equivalent of the written from dataset, they used WSFT grammar based text normalization.
+
+#### Data processing of spoken form
+- SwDA, SWB, and Fisher are spoken-form coversational transcription and thus dont contain ITN, capitalization or punctuation.
+- This data is converted to written format form by applying a commercial formatting service. Then generate ITN, capitalization and punctuation tags using the same process as written form datasets.
+- SwDA containes dialog act annotations so it is translated to token level disfluency tags.
+
+#### Tag Classes
+- ITN: Tag each token as one of the five entity types (alphanumeric, numeric, ordinal, money, time) or "0" representing non-ITN. As WFST grammers is applied on the each spoken form ITN entity span, signified each ITN entity span by tagging the first token as the entity tag and prepending an undersocre character to the remaining tags in the span.
+- Punctuation: Defined 4 tag catagories: comma, period, question mark, and "0" for no punctuation.
+- Capitalization: defined 3 tag categories: all uppercase("U"), capitalize only the first letter ("C") and all lowercase ("O").
+- Disfluency: Followinf SwDA annotation they are defined into 7 catagories: correction of repetation, reparandum repetation, correction, reparandun, filler word, all other disfluency and non-disfluency.
+
+### Result
+### Punctuation results:
+
+| Test Set | Model | COMMA `P R F1` | PERIOD `P R F1` | Q-MARK `P R F1` | OVERALL `P R F1` |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| Ref. CNN Stories | TASK-SMALL | 84 80 82 | 90 83 86 | 86 83 84 | 86 81 84 |
+| | TASK | **84** **82** **83** | 91 84 87 | 86 **85** **85** | **87** **83** **85** |
+| | JOINT | 84 81 82 | **90** **84** **87** | **86** 83 **85** | 86 82 84 |
+| Ref. DailyMail Stories | TASK-SMALL | 76 79 77 | 90 88 89 | 82 71 76 | 82 83 82 |
+| | TASK | 77 **80** **79** | **92** **90** **91** | **88** **78** **83** | 84 85 84 |
+| | JOINT | 77 79 78 | 91 89 90 | 84 74 78 | **83** **84** **83** |
+| ASR IWSLT 2011 TED | TASK-SMALL | 66 31 43 | 73 68 71 | 59 42 49 | 69 49 56 |
+| | TASK | 68 **33** **44** | 75 68 72 | 56 45 **50** | 71 50 **57** |
+| | JOINT | 70 **20** 31 | 75 67 71 | **80** 26 39 | **73** 42 50 |
+| Ref. IWSLT 2011 TED | TASK-SMALL | 78 61 69 | 81 88 85 | 80 85 82 | 79 74 77 |
+| | TASK | 79 **67** **72** | 84 **88** **86** | 71 **90** **80** | **81** **77** **79** |
+| | JOINT | 79 63 70 | 82 87 85 | **80** **85** **82** | 80 75 77 |
+| ASR NPR Podcasts | TASK-SMALL | 71 60 65 | 83 77 80 | 80 68 74 | 77 69 73 |
+| | TASK | 71 **62** **67** | 84 **78** **81** | 80 68 74 | 78 70 74 |
+| | JOINT | **71** 60 65 | 83 77 80 | **82** **69** **75** | **78** **69** **73** |
+| ASR Dictation | TASK-SMALL | 69 54 61 | 72 78 75 | 48 94 **64** | 70 65 67 |
+| | TASK | 70 **57** **63** | 73 79 76 | 44 94 60 | 71 67 **69** |
+| | JOINT | **70** 56 62 | **73** **80** **76** | **50** 81 62 | **71** **67** 68 |
+| Ref. Dictation | TASK-SMALL | 73 59 65 | 82 76 79 | 71 92 80 | 77 66 71 |
+| | TASK | 73 61 66 | 83 **78** 80 | 65 100 79 | 77 68 72 |
+| | JOINT | **73** **61** **66** | **85** **77** **81** | **72** **100** **84** | **78** **68** **72** |
+
+### ITN results:
+
+| Test Set | Model | ITN `P R F₁` |
+| :--- | :--- | :---: |
+| Ref. CNN Stories | TASK-SMALL | 88 87 88 |
+| | TASK | 88 87 88 |
+| | **JOINT** | **89 87 88** |
+| Ref. DailyMail Stories | TASK-SMALL | 84 84 84 |
+| | TASK | 84 84 84 |
+| | **JOINT** | **85 84 85** |
+| ASR NPR Podcasts | TASK-SMALL | 76 58 66 |
+| | TASK | 77 59 66 |
+| | **JOINT** | **77 59 67** |
+| Ref. Wikipedia | TASK-SMALL | **65** 69 **67** |
+| | TASK | 63 68 66 |
+| | **JOINT** | 64 **69** 66 |
+| ASR Dictation | TASK-SMALL | 75 59 66 |
+| | TASK | 74 58 65 |
+| | **JOINT** | **76 60 67** |
+| Ref. Dictation | TASK-SMALL | 84 62 72 |
+| | TASK | 83 62 71 |
+| | **JOINT** | **84 63 72** |
+| Ref. Web-crawled ITN | TASK-SMALL | 82 76 79 |
+| | TASK | 85 75 78 |
+| | **JOINT** | **82** 76 **79** |
+
+### Disfluency results:
+
+| Test Set | Model | DISFLUENCY `P R F₁` |
+| :--- | :--- | :---: |
+| Ref. SwDA | TASK-DISF | **95 84 89** |
+| | TASK | 89 47 62 |
+| | **JOINT** | 94 **85** **89** |
+| Ref. Conv. Disfluency | TASK-DISF | **78 44 56** |
+| | TASK | 72 20 32 |
+| | **JOINT** | 76 42 54 |
+
+### Capitalization results
+*Uppercase refers to words longer than 1 letter that are uppercase, Capital refers to words with only first letter capitalized, and Single-case refers to 1-letter words that are uppercase.*
+
+| Test Set | Model | UPPERCASE `P R F₁` | CAPITAL `P R F₁` | SINGLE-CASE `P R F₁` | OVERALL `P R F₁` |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| Ref. CNN Stories | TASK-SMALL | 38 83 52 | 94 92 93 | 97 49 66 | 93 84 87 |
+| | TASK | 38 83 52 | 94 93 94 | 97 49 66 | 93 85 88 |
+| | **JOINT** | **38 83 53** | **95 93 94** | **97 49 66** | **93 85 88** |
+| Ref. DailyMail Stories | TASK-SMALL | 82 92 87 | 94 93 93 | 91 77 84 | 93 92 92 |
+| | TASK | 81 **93** 87 | 94 94 94 | 92 77 84 | 93 93 93 |
+| | **JOINT** | 82 92 87 | **95 94 94** | **92 77 84** | **94 93 93** |
+| ASR NPR Podcasts | TASK-SMALL | 80 68 74 | 88 83 86 | 93 **84 88** | 88 82 86 |
+| | TASK | 83 69 75 | 89 84 86 | 90 81 85 | 89 83 85 |
+| | **JOINT** | **83 69 75** | **89 84 86** | 93 82 87 | **89 83 86** |
+| ASR Dictation | TASK-SMALL | 75 74 74 | 79 82 81 | 60 72 65 | 78 81 80 |
+| | TASK | 73 77 75 | 80 83 81 | 54 64 59 | 78 82 79 |
+| | **JOINT** | **75 79 77** | **80 83 82** | **63 77 69** | **79 82 81** |
+| Ref. Dictation | TASK-SMALL | 77 88 82 | 88 83 85 | 72 53 61 | 86 82 84 |
+| | TASK | 75 88 81 | 87 **85** 86 | 72 53 61 | 85 84 84 |
+| | **JOINT** | **78 88 83** | **88 84 86** | **73 56 63** | **86 83 85** |
+
 # Trying existing normalisation methods on both train and test transcripts and analyse ASR performance with and without normalisation
+
 
 # Date: 18 Sept 2025 
 ---
