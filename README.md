@@ -327,6 +327,7 @@ Use publicly availabe dataset from various domains as well as additional set spe
 
 # Date: 24 sept 2025
 ## Paper 8: Universal-2-TF: Robust All-Neural Text formatting for ASR
+- Authors: Yash Khare, Taufiquzzaman Peyash, Andrea Vanzo, Takuya Yoshioka
 - ASR systems produces text output in spoken form, requiring text formatting (TF) post processing to convert the ASR model's output into a written style. This enhance the readablity of the generated transcrits and improves compatiblity with various downstream processes.
 - ASR model particularly seq2seq models like whispers are trained on audio files with written form transcripts collected from the Internet and can directly generate properly formatted transcipts, separating ASR to Speech-to-text and TF offers practical advantages making TF remain essential in modern commercial ASR systems.
 - This papet presents a fully fledges all-neural TF method that performs PR, truecasing and ITN.
@@ -374,7 +375,7 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 
 ### Models
 #### Finite State Transducer
-- Our conventional baseline approach is a finite state transducer constructed using JFLAP. Each state in the FST performs a series of edits to the input string to get its corresponding written format output string.
+- Conventional baseline approach is a finite state transducer constructed using JFLAP. Each state in the FST performs a series of edits to the input string to get its corresponding written format output string.
 - This FST model covers a wide range of entities which do not require contextual understanding or disambiguation such as: Cardinals, Fractions, date, time etc
 #### Neural ITN
 - they modeled ITN as a seq2seq problem where the source and target are spoken and written form of text respectively.
@@ -390,8 +391,7 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 - Neural ITN (Transformer + BERT-fusion + Copy attention) consistently outperforms rule-based FSTs.
 - Copy attention is better for robustness to OOVs and out-of-domain data.
 - BERT-fusion is better for in-domain normalization accuracy.
-- A hybrid Neural + FST framework provides additional reliability for production systems.
-- The approach generalizes well to multilingual settings without expert-crafted rules.
+- A hybrid Neural + FST framework provides additional reliability for production systems.The approach generalizes well to multilingual settings without expert-crafted rules.
 ---
 # Trying existing normalisation methods on both train and test transcripts and analyse ASR performance with and without normalisation
 
