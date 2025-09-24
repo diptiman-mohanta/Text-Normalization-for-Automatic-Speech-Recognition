@@ -359,7 +359,39 @@ Use publicly availabe dataset from various domains as well as additional set spe
 The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The Universal-1-TF model gives PER:29.9%, CER:1.2%, M-WER:0.6%, I-WER:52.7%. And the Full seq2seq gives PER:35%, CER:2.5%, M-WER:2.3%, I-WER:37.6 on the evaluation dataset. 
 
 ## Paper 9: Neural Inverse Text Normalization
+- Authors: Monica Sunkara, Chaitanya Shivade, Sravan Bodapati, Katrin Kirchoff
+- Dataset extracted from ParaCrawl, News commentary and MuST-C from German,Spanish and Indian Languages.
+- The Finite Scale Transducer(FST) based approaches to ITN work well but they are expensive to scale across languages since native languages speakers are needed to curate transfromation rules.
+- The data for ITN model trainig is not publicly availabe and hard to collect, we employ a data generation pipeline for ITN using a text to speech frontend.
+- Proposed a neural ITN solution based on seq2seq models that can perform well across domains and noisy setting such as conversational data.
 
+### Text Processing Pipeline
+- During this process of data preparation found some of the major problems:
+    - There are several variation of a written form of text, but text normalization techniques always use one fixed variation. this further increases with the varuation in locale and languages.
+    - Text normalization systems often ignore several punctuation symbols since the goal is to produce spoken form of text. However, punctuation is often relevant in the written form.
+    - Text normalization techniques may introduced errors when normalizing numbers or expanding some short forms, as the conversion requires to disambiguate based on the context.
+- To adress these issues they create a synthetic data by randomly sampling from cardinal numbers related sentences and introducing additional variations required for modelling ITN in spoken form of text.
+
+### Models
+#### Finite State Transducer
+- Our conventional baseline approach is a finite state transducer constructed using JFLAP. Each state in the FST performs a series of edits to the input string to get its corresponding written format output string.
+- This FST model covers a wide range of entities which do not require contextual understanding or disambiguation such as: Cardinals, Fractions, date, time etc
+#### Neural ITN
+- they modeled ITN as a seq2seq problem where the source and target are spoken and written form of text respectively.
+- This seq2srq model uses Bahdanau content based additive attention to align the output sequence with input.
+- Also implemented as non recurrent transformer based sequence to sequence model where multihead self attention layers are used in encoder and decoder. For all our transformer models, the source and target sentences are segmented into sub word sequence.
+- **Copy Attention:** For ITN, there existing a significant overlap between source and target sentence. Standard seq2seq models which is rely on content bases attention are often prone to undesirable errors such as insertion, substitutions and deletion during conversion. The copy mechanism use a generation probablity to choose between source sentence vocabulary and a fixed target vocabulary thus allowing to generate out of vocabulary words.
+- **Pretrained Models for ITN:** Recent pretrined model achived tremendous sucess and lead to significant on various natural languages understanding tasks. These models trained on aa large amounts of unlabelled data capture rich contextual representation of the input sentence. In this they attempted two strategies to incorporate pretraining into ITN:
+  - To use a pretrained seq2seq model and finetune it for ITN: for this intialized the encoder decoder of a seq2seq model with a pretrained BART model and then finetuned the model on the ITN dataset.
+  - Use a pretrained masked language model like BERT as context-aware embedding for ITN: Used BERT to extract context aware embeddings or fuse it into each layer for transfomer encoder or decoder via an attention mechanism.
+- **Hybrid Solution:** seq2seq model is prone to errors and neural network need a good amount of data for training to handle new entity. Thus they propose a novel hybrid approach to combine neural ITNS with an FST, where the spoken form output of ASR system is first passes through the proposed neural ITN model followed by FST.A confidence score emitted by the Neural ITN model is used as a switch to make a decision in the run time weather to use neural ITN input.
+
+### Results
+- Neural ITN (Transformer + BERT-fusion + Copy attention) consistently outperforms rule-based FSTs.
+- Copy attention is better for robustness to OOVs and out-of-domain data.
+- BERT-fusion is better for in-domain normalization accuracy.
+- A hybrid Neural + FST framework provides additional reliability for production systems.
+- The approach generalizes well to multilingual settings without expert-crafted rules.
 ---
 # Trying existing normalisation methods on both train and test transcripts and analyse ASR performance with and without normalisation
 
