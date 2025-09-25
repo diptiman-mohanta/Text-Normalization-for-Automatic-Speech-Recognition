@@ -393,7 +393,61 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 - BERT-fusion is better for in-domain normalization accuracy.
 - A hybrid Neural + FST framework provides additional reliability for production systems.The approach generalizes well to multilingual settings without expert-crafted rules.
 ---
-# Trying existing normalisation methods on both train and test transcripts and analyse ASR performance with and without normalisation
+
+# Date: 25 Sept 2025
+## Paper 10: Streaming, Fast and Accurate On-Device Inverse Text Normalization For Automatic Speech Recognition
+- Authors: Yashesh Gaur, Nick Kibre, Jian Xue, Kangyuan Shu, Yuhui Wang, Issac Alphanso, Jinyu Li, Yifan Gong
+- In this approach it consist of a new transformer-based tagger, which tags incoming lexical tokens from ASR in a streaming manner.
+- The Tag contains information about the ITN category that can be associated with any tagged span.
+- Once tagged span is availabe an ITN categories specific WFST performs the actual conversion, only on the tagged part of a sentence.
+- The contributions of this papers are:
+   - Propose a novel modelling solution for ITN. It splits the task into tagging and transduction. This alloweded to get high quality, streaming and light weight models that can be deployded to on device applications.
+   - Designed a chunk based transformation tagger which enables streaming ITN. This design configured to trade off between accuracy and latency.
+   - Proposed a tag to denote a particular ITN category.
+ 
+### On-device Inverse Text Normalization
+
+#### Modeling ITN within E2E ASR
+- Conventionally, ITN has been modeled as separate components that resides in the post processing pipeline of the ASR.
+- Then the end-to-end(E2E) training paradigm allows us to train a model that goes from speech to display fromat text directly. This means that ITN is learnt implicitly within the ASR model. In this ITN streaming comes out ina truly streaming fashion with no additional latency. The memory footprint of the model is reduced due to no external ITN model to store.
+- Some drawback are since speech recognition is tightly coupled with ITN in this scenario, it looses all the flexibility in ITN system configuration. In the absence of external and configurable ITN, one would need to train a different E2E-ASR model for every domain. And updating any ITN need a lot of retraining if the ASR model on all data again.
+
+#### Weighted Finite State Transducers with rescoring
+- WFST are very nicely suited to the task of ITN beacuse ot allow application of the arbitary hand crafted rules and in many scenarios, can perform task in a compact or robust manner.
+- Since spoken forms are ambiguous, we use the spoken-to-written FSTs to map them to multiple tagged written-form candidates and use a ranker to choose the optimal one depending on the context.
+- The ranker is utilized in a simple log-linear interpolation setup.
+- They choosed an n-gram model as a main choice for ranker. This is also built into the FST.
+- An additional LSTM ranker to further improve contextual re-ranking.
+
+#### Modeling ITN as a Seq2Seq task
+- In this they considered the transformer-seq2seq architecture, to model the task of ITN.
+- Learning the ITN task is an end-to-end manner has some advantages:
+   - Unlike WSFTs, where experts needs to prepare the conversion rules, these models lear all the rules entirely from the data, with no involvement from human expert and can be scalable to new domains and languages with more and more data.
+   - These models tens to be all-neural, their size can be compressed using a myriad of techniques.
+- There are some challenges that prohibits the deployment of an all neural model for ITN.
+  - ITN models are required to change their behaviour by ingesting arbitary human specific rules. This kind of functionality is difficult to enable with all neural model since they require a large amount of data to learn.
+  - Even when trained with large amount of data, all neural ITN model can still suffer poor generalization.
+ 
+#### Proposed approach: Transformer Tagger + WFST
+- This aapproach is built on the insight that ITN can be broken into 2 disjoint step.
+   - First step finds which parts of the sentence needs to be converted and corresponding ITN category for them.
+   - Second step is actual conversion according to rule of ITN category.
+- More specifically trained a transfomer neural network "tagger" which process the output of ASR in a streaming manner and predicts a "tag" for every input token. Each tag is associated with a certain ITN category. For token which dont belong to any ITN category, a blank token is put out.
+- Once the tag are predicted, the WFST is responsible for the actual conversion. The WFST component is a collection of several FSTs, where each FST is responsible for a particular ITN category or tag.
+- The transfomer-tagger learns to use the context, both history and limited feature, to predict what tags needs to be assigned to any input token.
+- To make this transformer work in a streaming manner, they used a chunk based processing. More specifically, the transformer only processes a certaun chunk of token at a time nd it does not have acess to all the token in the future to make the prediction.
+- Chunk based processing means that output is not available untill all tokens in a chunk are available.
+- For streaming and on-device application, a very small latency is preferred. However a small chunk size means limited look ahead and a smaller window to do context modeling. Hence there is a trade-off between latency and accuracy.
+
+### Result
+- For text only evaluation this model outperform other baseline with the precision(0.81), recall(0.84) and recall(0.82) with the model size 5.5MB lowest of all the baselines(WFST+n-gram,WFST+n-gram+LSTM,S2S-small,S2S-large, Tagger+WFST).
+- In speech to text evaluation this proposed model+ Lexical ASR outperfrom other baselines with Precision 0.71, Recall 0.75, F1 0.73 and TER 22.70.
+
+
+## Paper 11: Mixed Case Contectual ASR using Capitalization Masks
+- Authors: Diamantiono Caseiro, Pat Rondon, Quoc-Nam Le The, Petar Aleksic
+- 
+# Trying existing normalisation methods on both train and test transcripts and analyse ASR performance with and without normalisation 
 
 # Date: 18 Sept 2025 
 ---
