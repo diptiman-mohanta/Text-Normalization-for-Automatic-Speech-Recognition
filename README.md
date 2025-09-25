@@ -446,7 +446,50 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 
 ## Paper 11: Mixed Case Contectual ASR using Capitalization Masks
 - Authors: Diamantiono Caseiro, Pat Rondon, Quoc-Nam Le The, Petar Aleksic
-- 
+- E2E mixed case ASR systems that directly predict words in the written domain are attractive due to being simple to build, not requiring explicit capitalization models, allowing streaming capitalization without additional effort beyond that required for streaming ASR and their small size.
+- Mixed case E2E ASR model are trained using written domain training utterances with case information and different case variants of the same word are treated as independent token to be predicted by ASR.
+- Two major advantages are:
+    - They are easy to build.
+    - Explicit capitalization module is not required during inference.
+- One major disadvantage is its higher word error rate(WER) and capitalization quality may be inferior to using an explicit capitalization model.
+- In this paper they proposed a novel representation for mixed case words that enables the use of single case biasing model and achieves similar ASR quality as mixed case ASR, while achieving improved capitalization quality and reduced size and compilation time of contextual models.
+
+### Capitalization Masks
+- Proposed the use of capitalization masks to overcome the contextual modeling problems. These masks allow us to decouple the word from its capitalization information, enabling us to compactly model allcase variants and avoid redundancy because all capitalized variants of an word decompose into the same peices.
+- With this mask a word is represented in two parts:
+   - The first part is a single case version of the word.
+   - The second part is optional and consists of a sequence of bit 0/1 indicating if the character at the corresponding position in the word is upper(1) or lowercase(0).
+- Used 16 Unicode Braille charcters as our control characters, representing nibbles of values 0 through 15 in order. These allow for easy interpretation of mask because the presence of one or two dots in each row represents and the most significant in the bottom row, so that the mask is read top-to-bottom to determine the capitalization of character from left to right.
+- Capitalization mask E2E ASR system are built by tokenizing all training data transcription using the capitalization masks. This system is trained to predict these tokens. At the prediction time , the capitalization are converted back to mixed case using a denormalization step before being presented to the user or used for error evaluation.
+  
+### Results
+#### ASR result on General voice search test set are 
+| Model | WER | OWER | CER |
+| :--- | :--- | :--- | :---: |
+| Lowercase | 6.4 | 1.8 | 33.0 |
+| Mixed-Case | 6.5 | 2.2 | 13.4 |
+| Cap Masks | 6.5 | 2.2 | 13.1 |
+
+#### ASR results on Contextual Test Sets
+**Table: WER on Context Test Sets.**
+| Test Set | Model | No Context | Context | Rel. |
+|---|---|---|---|---|
+| **Contacts** | Lowercase | 16.2 | 5.7 | -65% |
+| | Mixed-Case | 16.5 | 5.5 | -67% |
+| | Cap. Masks | 16.3 | 5.5 | -66% |
+| **Apps** | Lowercase | 6.2 | 2.7 | -56% |
+| | Mixed-Case | 6.1 | 3.2 | -48% |
+| | Cap. Masks | 6.5 | 2.8 | -61% |
+
+**Table: WER on Anti-Context Test Sets.**
+| Test Set | Model | No Context | Context | Rel. |
+|---|---|---|---|---|
+| **Contacts** | Lowercase | 6.4% | 6.6% | 3% |
+| | Mixed-Case | 6.5% | 6.6% | 2% |
+| | Cap. Masks | 6.5% | 6.8% | 5% |
+| **Apps** | Lowercase | 6.4% | 6.4% | 0% |
+| | Mixed-Case | 6.5% | 6.5% | 0% |
+| | Cap. Masks | 6.5% | 6.5% | 0% |
 # Trying existing normalisation methods on both train and test transcripts and analyse ASR performance with and without normalisation 
 
 # Date: 18 Sept 2025 
