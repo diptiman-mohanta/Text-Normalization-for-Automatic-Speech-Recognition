@@ -490,6 +490,70 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 | **Apps** | Lowercase | 6.4% | 6.4% | 0% |
 | | Mixed-Case | 6.5% | 6.5% | 0% |
 | | Cap. Masks | 6.5% | 6.5% | 0% |
+
+# Date: 26 Sept 2025
+## Paper 12: RNN Approaches to Text Normalization
+- Authors: Richard Sproat, Navdeep Jaitly
+- Some RNNs produce very good results when measured in terms of overall accuracy, but they produce errors that would make them risky to use in a real applicaation, since in the errorful case, the normalization would convey completely the wrong message.
+- But with a pure RNN approach, we have not thus far succeeded in avoiding the above-mentioned risky errors, and it is an open question whether such can be avoided by such a solution.
+- In this paper they tried two type of neural models on a text normalization problem.
+   - The first is a neural equivalent of a source channel model that uses a seq2seq LSTM that has been sucessfully applied to the grapheme-to-phoneme conversion, along with a standard LSTM language model architecutre.
+   - The seconf treats the entire problem such as a seq2seq task, using the same architecture that has been used for speech to text conversion problem.
+- This dataset consist of 1.1 billion words of English text and 290 million words of russian text from Wikipedia.
+
+### Text Normalization using LSTMs
+- In this approach depends on the observation that text normalization can be broken down into two subproblems. For any token
+   - What are the possible normalizations of that token.
+   - Which one is appropriate to the given context.
+- The first component is a string-to-string transduction problem. Furthermore, since WFSTs can be used to handle most or all of the needed transductions, the relation between the input and output string is regular, so that complex network architecture involving, say, stacks should not be needed. For the input, the string must be in term of characters, since for a string like 123, one needs to see the individual digits in the sequence to know how to read it. Similarly it helps to see the individual character for a possibly OOV word such as a snarky to classify it as a token to be left alone.
+- The second components is effectively a language modeling problem, the appropriate level of representation there is words.
+- Therefore the output of the first component to the in terms of words.
+#### LSTM architecture
+- Trained two LSTM models
+   - For channel: This LSTM model learn from a sequence of charcters to one or more wors token of output.
+      - For most input token this will involve deciding to leave it alone, that is to map it to self or in the case of punctuation to map it to sil, corresponding to silence.
+      - For other token it must decide to verbalize it in a variety of diffferent way.
+      - used an bidrectional seq2seq model. One with two forward and two backward hidden layer(Shallow model); and one with three forward and then three backward hidden layers (Deep model).
+   - For Language: The LSTM system reads the word either from the input, if mapped to self or else from the output if mapped from anything else.
+      - This follows the standard RNN language model architecture with an input output layer consisting of |*V*| to 100000 a dimensionality-reduction projection layer, a hidden LSTM layer with a feedback loop and a hierarchical softmax output layer.
+      - During training the LSTM learns to predict the next word given the current word but the feedback loop allows the model to build up a history of arbitary length.
+- The both models are trained separately.
+#### Decoding
+- At decoding time we need to combine the outputs of the channel and language model.
+- This model is done as follows
+   - Each postion in the output of the channel model, we prune the predicted output symbols.
+   - If one hypothesis has a very high probablity, they eliminated all other prediction at that position: in practice thid happens in most cases sincr the channel modle os typically very sure of itself at most of the input postions.
+   - Also pruned all hypotheses with a low probability (default 0.05). and kept all the *n* best hypotheses at each output position. For these experiment n=5 is kept. 
+- All the resulting pruned vectors to populate the corresponding postions in th einput to the LM with the channel probablity is multiplied by the LM probability times as LM weighting factor.
+- This method of combining the channel and LM probablities can thought of as a poor-man's equivalent of the composition of a channel and LM weight finite state transducer. The main difference is that there is no straightforward way to represent an arbitary lattice in an LSTM.
+
+#### Results
+- The first point observe is that the overall performance is good: the accuracy is about 99% for English and 98% Russian. But nearly all of this can be attributed to the model predicting self for most input tokens and sil for punctuation tokens.
+- The performance start to break down, with the lowest perfromance predictably beingfound for cases such as TIME that are not very common in these data.
+- In the maximum cases the deep model performed better than shallow model except some cases like money.
+- These are entirely due to the channel model: there is nothing ill-informed about hte sequences produced, they just happen to be wrong given the input.
+- One way to see this is to compute the oracle accracy, the proportion of the time that the correct answer is in the pseudo-lattice produced by the channel. For the English deep model the oracle accuracy is 0.998. Since the overall accuracy meaning 0.993, that means that 2/7 or about 29% of the error can be attributed to the channel mode not giving the LM a choice of selecting the right model.
+  
+### Attention-based RNN sequence-to-sequence models
+- It models the entire problem as an seq2seq problem. Mapped whole task as an whole task where we map a sequence of input characters to a sequence of the output words.
+- They used an tensorflow model with an attention mechanism. Attention models are particularly good for seq2seq problems since they are able to continiously update the decoder with information about the state of the encoder and thus attend better to the relation between the input and output sequences.
+- To solve this problem they took a different approach and placed each token in a window of 3 words to the left and 3 word to the right, marking the to-be normalizrd token with a distinctive begin and end tag.
+- Specifically they used a 4 layer bidirectional LSTM reader that reads input charcters and a layer of 256 attentional units and 2-layer decoder that produces word sequences.
+
+#### Results
+- The performance is mostly better than the previous model. This suggest in turn that modeling the problem as a pure seq2seq transduction is indeed viable as an alternative to the source-channel approach thye had taken previously.
+- For English 90.6% of the case not found in the training data were correctly produced (compared to 99.8% of the seen case), and for russian 86.7% of the unseen cases were correct (versus 99.4% of the seen cases).
+
+#### Results on "reasonable" -sized datasets
+- the system is again retrained from scratch with 11.4 million tokens of english  and 11.9 million token of Russian.
+- The test data overlapped with the training data is 96.9% of the tokens for english and 95.5% fot Russian, with  the accuracy of the non overlapped token being 95.0% for English and 93.5% of Russian.
+
+### Finite-state Filters
+- The attention based seq2seq model can produce extremly high accuracies but still prone to occasionally producing output that is completely misleading given the input.
+- For this a FST is constucted to guide the decoding. A FST that maps from expressions of the form `number` `measure_abbreviation` to a cardinal or decimal number and the possible verbalization of the measure abbreviation.
+- FST implements an overgenrating grammar that includes the correct verbalization, but allow other verbalization as well.
+- They constructed a Thrax grammar to cover the measure and money expression, two classes where the RNN is prone to produce silly reading.
+
 # Trying existing normalisation methods on both train and test transcripts and analyse ASR performance with and without normalisation 
 
 # Date: 18 Sept 2025 
