@@ -324,7 +324,7 @@ Use publicly availabe dataset from various domains as well as additional set spe
 - Achives a better perfomance on out of domain test data with upto 17% relative punctuation-case-aware word error rate reduction. 
 - The second approach use a single decoder conditioned on the type of output. This yeild a 42% relative PC-WER reduction comapred to whisper-base and 4% relative(normalized) wer reduction compared to the normalized output of a punctuated-only model.
 - This proposed model demonstates the feasiblity of a joint ASR system using a little as demonstates the feasiblity of a joint ASR system as little as 5% punctuated training data witha moderate(2.4% absolute) PC-WER increase.
-
+---
 # Date: 24 sept 2025
 ## Paper 8: Universal-2-TF: Robust All-Neural Text formatting for ASR
 - Authors: Yash Khare, Taufiquzzaman Peyash, Andrea Vanzo, Takuya Yoshioka
@@ -491,6 +491,8 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 | | Mixed-Case | 6.5% | 6.5% | 0% |
 | | Cap. Masks | 6.5% | 6.5% | 0% |
 
+---
+
 # Date: 26 Sept 2025
 ## Paper 12: RNN Approaches to Text Normalization
 - Authors: Richard Sproat, Navdeep Jaitly
@@ -553,6 +555,33 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 - For this a FST is constucted to guide the decoding. A FST that maps from expressions of the form `number` `measure_abbreviation` to a cardinal or decimal number and the possible verbalization of the measure abbreviation.
 - FST implements an overgenrating grammar that includes the correct verbalization, but allow other verbalization as well.
 - They constructed a Thrax grammar to cover the measure and money expression, two classes where the RNN is prone to produce silly reading.
+
+## Paper 12: Neural Text Normalization with Subword Units
+- Author: Courtney Mansfield, Ming Sun, Yuzong Liu, Ankur Gandhe, Bjorn Hoffmeister
+- Non-standard words (NSWs) include expressions such as time, date, abbreviations and letter sequence are commonly appear in written texts such as website, books and movie scripts.
+- ASR normalizes the training corpus before building its language model. Among many normalizing the written form text to its spoken form is difficult due to the following bottlenecks:
+   - Lack of supervison: there is no incentive for people to produce spoken form text. Thus it is hard to obtain a supervised dataset for training machine learning model.
+   - Ambiguity: For written text, a change in context may require a different normalization.
+
+### Model
+#### Baseline Model
+- Implemented a seq2seq model trained on window-based data.
+- This model architecute uses attention to allign the output token with input charcterstics.
+- The encoder takes character sequence as input. Otherwise the sequence of numbers or dates are hard to interpret.
+- On the output side, they belived that various granularities such as character, word and word fragments can be suitable. a word level decoder is used.
+- A window-based seq2seq model, although able to attend well to a central piece os text, is not practical for applying over a whole sentence.
+- To extend the model to full sentence, they broke the source sentences into segments. Then apply the model to one segment after another and concatenate their output token to produce full sentences.
+- An second baseline, a seq2seq model is trained with full sentence data. It doesnot require any preprocessing step and directly translates a sentence to its spoken form.
+- Again the encoder works at the character level while the decoder output sequence of words while attention is used to align the input and output sequences.
+
+#### Proposed Model
+- Thesre are several issue wirh the baseline model. Although there is no OOV problem on the input side since it is modeled as a sequence of characters, the decoder has an OOB issue- it cannt be modeled every possible token.
+- The window based seq2seq adopts a special output token `self` that significantly reduces the output vocabulary size.
+- This model has shown food results in the open-vocabulary speech recognition and machine translation tasks.
+- Subwords capture frequently co-occuring character combinations.
+- An Extreme case of the subword model is a character model. Compared with only characters, it is belived segmenting input and output into subwords eases a seq2seq model's burden of modeling long distance dependencies.
+##### Linguistic Feature
+- They also explored the linguistic feature like Casing, POS, and positional feature they are inexpensive to compute but add meaning to the NSW normalization
 
 # Trying existing normalisation methods on both train and test transcripts and analyse ASR performance with and without normalisation 
 
