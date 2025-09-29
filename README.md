@@ -684,7 +684,7 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 - This strategy discards the orginal decoder boundary and decides the sentence boundary purely on the linguistic features.
 
 ### Results
-#### Punctuation and Segmentation Results
+#### Punctuation, Segmentation and Downstream task Results
 **Table: Punctuation results**
 | Test Set | Model | PERIOD | Q-MARK | COMMA | OVERALL | $F_1$-Gain |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -707,7 +707,7 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 | | ST-Transformer | 87 79 83 | 81 75 78 | 70 61 65 | 79 71 75 | 6.0% |
 
 
-### Table: Segmentation Results
+**Table: Segmentation Results**
 | Test Set | Model | Segmentation | $F_1$-gain | $F_{0.5}$ | $F_{0.5}$-gain |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | | | **P** R $F_1$ | | | |
