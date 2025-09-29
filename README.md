@@ -556,7 +556,7 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 - FST implements an overgenrating grammar that includes the correct verbalization, but allow other verbalization as well.
 - They constructed a Thrax grammar to cover the measure and money expression, two classes where the RNN is prone to produce silly reading.
 
-## Paper 12: Neural Text Normalization with Subword Units
+## Paper 13: Neural Text Normalization with Subword Units
 - Author: Courtney Mansfield, Ming Sun, Yuzong Liu, Ankur Gandhe, Bjorn Hoffmeister
 - Non-standard words (NSWs) include expressions such as time, date, abbreviations and letter sequence are commonly appear in written texts such as website, books and movie scripts.
 - ASR normalizes the training corpus before building its language model. Among many normalizing the written form text to its spoken form is difficult due to the following bottlenecks:
@@ -582,6 +582,72 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 - An Extreme case of the subword model is a character model. Compared with only characters, it is belived segmenting input and output into subwords eases a seq2seq model's burden of modeling long distance dependencies.
 ##### Linguistic Feature
 - They also explored the linguistic feature like Casing, POS, and positional feature they are inexpensive to compute but add meaning to the NSW normalization
+
+---
+# Date: 29 Sept 2025
+## Paper 14: Punctuation Prediction for Streaming On-Device Speech Recognition
+- Authors: Zhikai Zhou, Tian Tan, Yamnin Qian
+- Dataset: 3000 hours of in-house chinese spoken utterance with both transcripts and punctuation with three test set Indoor, meeting and Mobile
+- Punctuation prediction, also known as punctuation restoration is defined as a sequence tagging task.
+- Many works for punctuation prediction have been proposed previously, which can be categorized based on modality: speech modal, text modal, and multimodal containing both.
+- Punctuation prediction is treated as a downstream task of unsupervised language models or as an additional task with a pretraining task like the replaced token detection.
+- For multi-modality inputs, fundamental frequency and energy are the key features extracted from the speech data.
+- Most works treated punctuation prediction as a post-processing task of ASR output.
+- The mismatch is usually ignored between the vanilla inputs in the training stage and the ASR hypotheses with errors in the testing stage.
+- In this paper, a joint punctuation ASR model is proposed to minimize the number of the additional parameters for the accurate on device punctuation prediction.
+
+### Methods for Punctuation Prediction
+#### Two-pass modeling
+- Most ASR works consider punctuation prediction as a post processing task for ASR, taking raw text sequence as input and predicting punctuation for each token.
+- The language model takes transcripts as input and predicts the punctuation marks for each position.
+- In the end, the transcrips and the punctuation are combined to get the final result.
+
+#### One pass modeling
+##### Direct ASR Modeling
+- A straightforward method is to utilize transcripts with punctuation mark to train the ASR model directly outputs the final results with punctuation marks.
+
+##### Joint Punctuation-ASR Modeling
+- The proposed joint model with two series of output for ASR tokens and punctuation marks.
+- Also, the model is trained using the multi-task learning framework.
+- The parameter of this model can be directly transferred from an existed ASR Model.
+- As only the decoder is utilized for actual token prediction in the trigger attention mechanism, the joint model is trained using the following multi-task loss without the CTC loss.
+- For the joint punctuation ASR models, method for the joint modeling for punctuation and ASR Tasks, the decoder takes previous tokens and hidden representations as inputs, then the features from different decoder layers are exploited using a linear projection layer for punctuation prediction.
+- The method not only takes the previous token as input but previous punctuation marks are also taken.
+- The embedding of both tokens and punctuation marks are summed as the input of the ASR decoder.
+- In the decoding phase, they conducted beam search or Pure ASR results and take argmax result on punctuation.
+
+##### Teacher-forcing Decoding Scheme
+- An important problem for evaluation one-pass pipeline punctuation prediction is that the error from ASR and punctuation prediction are combined.
+- Weather the ASR or the punctuation prediction is wrong cannot be determined from any punctuation-related error due to the presence of insertion and deletion errors. Therefore the results of the one-pass models, F1 score cannot be directly calculated.
+- For the auto-regressive decoder, the idea of the teacher forcing training is refereed to evaluate the punctuation prediction
+- For the one-pass models, the posterior of punctuation marks at time step is calculated. 
+
+### Results
+#### Two-pass pipeline with Punctuation Model
+**Table: Performance Comparison of the Two-Pass Strategy with Punctuation Models**
+| Model | #params | Indoor $\text{TER}/F_1$ | Mobile $\text{TER}/F_1$ | Meeting $\text{TER}/F_1$ |
+| :---: | :-----: | :--------------------: | :---------------------: | :----------------------: |
+| Trans-2L | 9.88M | 15.93/86.80 | 27.94/70.69 | 28.89/72.64 |
+| Trans-4L | 16.19M | 15.88/87.28 | 27.84/71.48 | 28.76/74.09 |
+| Trans-6L | 22.49M | 15.72/87.59 | 27.73/71.79 | 28.64/74.15 |
+| ASR | 72.6M | 13.49 (CER) | 24.89 (CER) | 25.91 (CER) |
+
+#### One-Pass ASR-Punctuation Models
+**Table: Performance comparison of different strategies for both ASR and punctuation prediction. ASR+Trans-6L: The two-pass pipeline using punctuation language models. ASR with punc: The one-pass direct ASR modeling on transcripts with punctuation. Joint Model utilizes feature from which output of the decoder layer: x1: 1st, x2: 3rd, x3: Last, x4: Sum of all, y: Last, but feed punctuation result to the input.**
+| Model | $\alpha$ | #Ext par. | Indoor $\text{TER/CER}/F_1$ | Mobile $\text{TER/CER}/F_1$ | Meeting $\text{TER/CER}/F_1$ | Average $\text{TER/CER}/F_1$ |
+| :---: | :---: | :-------: | :--------------------------: | :--------------------------: | :---------------------------: | :--------------------------: |
+| ASR + Trans-6L | - | 22.49M | 15.72/13.49/87.59 | 27.73/24.89/71.79 | 28.64/25.91/74.15 | 24.03/21.43/77.84 |
+| ASR with Punc | - | 11.3K | 15.49/14.45/**92.02** | 31.73/28.87/71.66 | 31.88/29.95/78.06 | 26.37/24.42/80.58 |
+| Joint Model -x3 | 1.0 | 2.0K | 14.62/**13.19**/91.01 | 24.27/21.39/72.38 | **27.76**/**25.33**/78.82 | 22.22/19.97/80.74 |
+| Joint Model -x3 | 2.0 | 2.0K | **14.51**/**13.20**/91.45 | **23.66**/**20.60**/71.70 | 28.46/26.15/78.29 | **22.21**/**19.98**/**80.48** |
+| Joint Model -x3 | 5.0 | 2.0K | 14.53/13.36/92.00 | 24.48/21.59/**72.17** | 28.77/26.53/**79.11** | 22.59/20.49/**81.09** |
+| Joint Model -x1 | 2.0 | 2.0K | 39.51/17.54/50.51 | 57.92/35.58/35.21 | 46.35/37.74/53.51 | 47.93/30.29/46.41 |
+| Joint Model -x2 | 2.0 | 2.0K | 20.10/13.68/79.84 | 35.44/25.99/58.57 | 34.68/27.77/69.74 | 30.07/22.48/69.38 |
+| Joint Model -x3 | 2.0 | 2.0K | **14.51**/**13.20**/91.45 | **23.66**/**20.60**/71.70 | 28.46/26.15/78.29 | **22.21**/**19.98**/**80.48** |
+| Joint Model -x4 | 2.0 | 2.0K | 14.61/13.23/91.17 | 25.31/22.40/70.91 | **28.29**/**25.83**/77.72 | 22.74/20.49/79.93 |
+| Joint Model -y | 2.0 | 4.0K | 14.56/13.24/91.20 | 24.82/21.95/**72.30** | 29.23/27.01/**78.46** | 22.87/20.73/**80.65** |
+
+
 
 # Trying existing normalisation methods on both train and test transcripts and analyse ASR performance with and without normalisation 
 
