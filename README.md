@@ -558,6 +558,7 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 
 ## Paper 13: Neural Text Normalization with Subword Units
 - Author: Courtney Mansfield, Ming Sun, Yuzong Liu, Ankur Gandhe, Bjorn Hoffmeister
+- Parallel writtern/speech formatted text from Sproat and Jaitly
 - Non-standard words (NSWs) include expressions such as time, date, abbreviations and letter sequence are commonly appear in written texts such as website, books and movie scripts.
 - ASR normalizes the training corpus before building its language model. Among many normalizing the written form text to its spoken form is difficult due to the following bottlenecks:
    - Lack of supervison: there is no incentive for people to produce spoken form text. Thus it is hard to obtain a supervised dataset for training machine learning model.
@@ -582,6 +583,21 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 - An Extreme case of the subword model is a character model. Compared with only characters, it is belived segmenting input and output into subwords eases a seq2seq model's burden of modeling long distance dependencies.
 ##### Linguistic Feature
 - They also explored the linguistic feature like Casing, POS, and positional feature they are inexpensive to compute but add meaning to the NSW normalization
+
+### Result
+**Table: Comparison of models on test set.**
+| Model | SER (%) | WER (%) | BLEU | Params (M) | Train Time (hours) | Latency (ms/sent) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| Identity | 99.39 | 32.70 | 51.74 | N/A | **0** | N/A |
+| Window-based | 12.74 | 3.75 | 94.55 | 10 | 3.9 | 238 |
+| Sentence-based | 48.67 | 9.26 | 82.28 | 55 | 8.0 | 159 |
+| Subword | **3.31** | **0.91** | **98.79** | 12 | 10.0 | **88** |
+| Subword + Feat. w/o label | 2.77 | 0.78 | 98.98 | 12 | 13.5 | 89 |
+| Subword + Feat. w/o casing | 0.96 | 0.23 | 99.66 | 12 | 12.8 | **88** |
+| Subword + Feat. w/o POS | 0.79 | 0.18 | 99.71 | 12 | 10.4 | **88** |
+| Subword + Feat. w/o position | 0.80 | **0.17** | **99.73** | 12 | 13.0 | **88** |
+| Subword + All Feat. | **0.78** | **0.17** | **99.73** | 12 | 15.4 | 89 |
+
 
 ---
 # Date: 29 Sept 2025
