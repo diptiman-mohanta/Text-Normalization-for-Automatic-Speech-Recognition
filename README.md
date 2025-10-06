@@ -776,10 +776,23 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 | | BL-Transformer | 40.5 | |
 | | ST-Transformer | 41.2 | +0.7 |
 
+---
+# Date: 06 Oct 2025
+## Paper 14: DATA2VEC-AQC: SEARCH FOR THE RIGHT TEACHING ASSISTANT IN THE TEACHER-STUDENT TRAINING SETUP
+- Authors: Vasista Sai Lodagala, Shreyan Ghosh, S. Umesh
+- Dataset:
+- Proposed data2vec-aqc, a novel SSL-based pre-training methodology from learning speech representation from low resource unlabeled speech.
+- Firstly made data2vec simultaneously solve a MAM-based cross-contrastive task between the student and teacher networks by passing randomly augmented versions of the same audio sample passed through each network.
+- Then added quantizer module similar as sampling negatives from the qualtized representations.
+- Then introduced a clustering module to the cluster the quantized representation and control the effect of those negatives in the contrastive loss computation, that share the same cluster as the positive.
 
+### Methodology
+- Standard data2vec architecture involves a student and teacher network, both of which see raw speech as the input and the teacher's parameter are updated based on an exponential moving avarage of the students coder.
+- A simple L<sub>2</sub> loss is computed between the student embedding and the average of the embedding from the top 8 layer of the teacher network as it works better than L<sub>1</sub> loss in speech processing.
+- 
 
+---
 # Trying existing normalisation methods on both train and test transcripts and analyse ASR performance with and without normalisation 
-
 # Date: 18 Sept 2025 
 ---
 ## Steps
