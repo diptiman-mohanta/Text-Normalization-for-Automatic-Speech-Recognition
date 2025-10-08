@@ -815,4 +815,18 @@ The Universal-2-TF model gives PER:29%, CER:0.9%, M-WER:0.4%, I-WER: 30.3%. The 
 ## ASR perfomance without normalizations
 Evaluated ASR perfomance on the Test dataset `dataset_all.json` using different pretrained ASR model like `indicwav2vec-hindi`,`Wav2Vec2-large-xlsr-hindi`,`vakyansh-wav2vec2-hindi-him-4200`, and `wav2vec2-large-xlsr-53` using the code `nonormalization.py` and all the results are stored in `Without Normalization Results` directory.
 
+| Model | WER (%) | CER (%) | Link |
+| :---: | :---: | :---: | :---: |
+| indicwav2vec-hindi | 21.38 | 7.79 | https://github.com/diptiman-mohanta/Text-Normalization-for-Automatic-Speech-Recognition/tree/main/Without%20Normalization%20Results/ai4bharat |
+| Wav2Vec2-large-xlsr-hindi | 68.76 | 28.19 | https://github.com/diptiman-mohanta/Text-Normalization-for-Automatic-Speech-Recognition/tree/main/Without%20Normalization%20Results/Wav2Vec2-large-xlsr-hindi |
+| vakyansh-wav2vec2-hindi-him-4200 | 24.64 | 8.94 | |
+
 ## ASR performance with normalization
+| Normalizer | Model(For Transcription) | WER (%) | CER (%) | Link |
+| :---: | :---: | :---: | :---: | :---: |
+| IndicNLP | indicwav2vec-hindi | 20.52 | 7.37 | |
+| | Wav2Vec2-large-xlsr-hindi | 69.3 | 28.43 | |
+| | vakyansh-wav2vec2-hindi-him-4200 | 23.81 | 8.51 | |
+| Whisper | indicwav2vec-hindi | 8.66 | 3.93 | |
+| | Wav2Vec2-large-xlsr-hindi | 41.84 | 21.19 | |
+| | vakyansh-wav2vec2-hindi-him-4200 | 9.82 | 4.63 | |
