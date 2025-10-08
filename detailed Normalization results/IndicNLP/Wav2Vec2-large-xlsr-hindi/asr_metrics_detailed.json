@@ -1,0 +1,17 @@
+{
+  "total_samples": 2288,
+  "successful_samples": 2288,
+  "failed_samples": 0,
+  "avg_wer_raw": 69.30566550371883,
+  "avg_cer_raw": 28.199694917367783,
+  "avg_wer_normalized": 69.30566550371883,
+  "avg_cer_normalized": 28.43041335939746,
+  "median_wer_raw": 68.99038461538461,
+  "median_cer_raw": 27.389106327462493,
+  "median_wer_normalized": 68.99038461538461,
+  "median_cer_normalized": 27.500000000000004,
+  "total_processing_time": 392.1076536178589,
+  "avg_processing_time": 0.17137572273507817,
+  "wer_improvement": 0.0,
+  "cer_improvement": -0.2307184420296764
+}

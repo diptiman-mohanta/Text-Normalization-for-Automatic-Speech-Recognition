@@ -1,0 +1,23 @@
+{
+  "total_samples": 2288,
+  "successful_samples": 2288,
+  "failed_samples": 0,
+  "avg_wer_raw": 105.15001876052735,
+  "avg_cer_raw": 283.87709129966515,
+  "avg_wer_cleaned": 24.646259976616225,
+  "avg_cer_cleaned": 8.935382036645407,
+  "avg_wer_normalized": 23.81256742107668,
+  "avg_cer_normalized": 8.51042409554149,
+  "median_wer_raw": 100.0,
+  "median_cer_raw": 287.7799900447984,
+  "median_wer_cleaned": 22.22222222222222,
+  "median_cer_cleaned": 7.585347142309168,
+  "median_wer_normalized": 20.0,
+  "median_cer_normalized": 7.142857142857142,
+  "total_processing_time": 153.60939574241638,
+  "avg_processing_time": 0.06713697366364352,
+  "wer_improvement_cleaning": 80.50375878391112,
+  "cer_improvement_cleaning": 274.94170926301973,
+  "wer_improvement_total": 81.33745133945067,
+  "cer_improvement_total": 275.36666720412364
+}

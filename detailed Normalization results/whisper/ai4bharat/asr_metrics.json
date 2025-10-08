@@ -1,0 +1,19 @@
+{
+  "total_samples": 2288,
+  "valid_samples": 2288,
+  "overall_wer_normalized": 8.644175964437402,
+  "overall_cer_normalized": 3.9452081410598923,
+  "avg_wer_raw": 22.33699263851628,
+  "avg_cer_raw": 8.334585757509183,
+  "avg_wer_normalized": 8.66275662831266,
+  "avg_cer_normalized": 3.9307041572325696,
+  "median_wer_raw": 20.0,
+  "median_cer_raw": 6.920498084291188,
+  "median_wer_normalized": 6.25,
+  "median_cer_normalized": 2.564102564102564,
+  "total_processing_time": 354.34363055229187,
+  "avg_processing_time": 0.15487046789872896,
+  "empty_predictions": 0,
+  "model": "ai4bharat/indicwav2vec-hindi",
+  "total_time": 355.42936730384827
+}

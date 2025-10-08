@@ -1,0 +1,19 @@
+{
+  "total_samples": 2288,
+  "valid_samples": 2288,
+  "overall_wer_normalized": 9.81272419180916,
+  "overall_cer_normalized": 4.633992325253801,
+  "avg_wer_raw": 24.646259976616225,
+  "avg_cer_raw": 8.935382036645407,
+  "avg_wer_normalized": 9.819861073093875,
+  "avg_cer_normalized": 4.6277041609940515,
+  "median_wer_raw": 22.22222222222222,
+  "median_cer_raw": 7.585347142309168,
+  "median_wer_normalized": 7.4074074074074066,
+  "median_cer_normalized": 3.0303030303030303,
+  "total_processing_time": 144.0923969745636,
+  "avg_processing_time": 0.06297744623014143,
+  "empty_predictions": 0,
+  "model": "Harveenchadha/vakyansh-wav2vec2-hindi-him-4200",
+  "total_time": 145.22667956352234
+}
