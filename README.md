@@ -824,9 +824,9 @@ Evaluated ASR perfomance on the Test dataset `dataset_all.json` using different 
 ## ASR performance with normalization
 | Normalizer | Model(For Transcription) | WER (%) | CER (%) | Link |
 | :---: | :---: | :---: | :---: | :---: |
-| IndicNLP | indicwav2vec-hindi | 20.52 | 7.37 | |
-| | Wav2Vec2-large-xlsr-hindi | 69.3 | 28.43 | |
-| | vakyansh-wav2vec2-hindi-him-4200 | 23.81 | 8.51 | |
-| Whisper | indicwav2vec-hindi | 8.66 | 3.93 | |
-| | Wav2Vec2-large-xlsr-hindi | 41.84 | 21.19 | |
-| | vakyansh-wav2vec2-hindi-him-4200 | 9.82 | 4.63 | |
+| IndicNLP | indicwav2vec-hindi | 20.52 | 7.37 | https://github.com/diptiman-mohanta/Text-Normalization-for-Automatic-Speech-Recognition/tree/main/detailed%20Normalization%20results/IndicNLP/Ai4Bharat |
+| | Wav2Vec2-large-xlsr-hindi | 69.3 | 28.43 | https://github.com/diptiman-mohanta/Text-Normalization-for-Automatic-Speech-Recognition/tree/main/detailed%20Normalization%20results/IndicNLP/Wav2Vec2-large-xlsr-hindi |
+| | vakyansh-wav2vec2-hindi-him-4200 | 23.81 | 8.51 | https://github.com/diptiman-mohanta/Text-Normalization-for-Automatic-Speech-Recognition/tree/main/detailed%20Normalization%20results/IndicNLP/vakyansh |
+| Whisper | indicwav2vec-hindi | 8.66 | 3.93 | https://github.com/diptiman-mohanta/Text-Normalization-for-Automatic-Speech-Recognition/tree/main/detailed%20Normalization%20results/whisper/ai4bharat |
+| | Wav2Vec2-large-xlsr-hindi | 41.84 | 21.19 | https://github.com/diptiman-mohanta/Text-Normalization-for-Automatic-Speech-Recognition/tree/main/detailed%20Normalization%20results/whisper/Wav2Vec2-large-xlsr-hindi |
+| | vakyansh-wav2vec2-hindi-him-4200 | 9.82 | 4.63 | https://github.com/diptiman-mohanta/Text-Normalization-for-Automatic-Speech-Recognition/tree/main/detailed%20Normalization%20results/whisper/vakyansh |
