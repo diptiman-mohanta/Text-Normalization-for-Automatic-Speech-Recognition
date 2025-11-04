@@ -830,3 +830,45 @@ Evaluated ASR perfomance on the Test dataset `dataset_all.json` using different 
 | Whisper | indicwav2vec-hindi | 8.66 | 3.93 | https://github.com/diptiman-mohanta/Text-Normalization-for-Automatic-Speech-Recognition/tree/main/detailed%20Normalization%20results/whisper/ai4bharat |
 | | Wav2Vec2-large-xlsr-hindi | 41.84 | 21.19 | https://github.com/diptiman-mohanta/Text-Normalization-for-Automatic-Speech-Recognition/tree/main/detailed%20Normalization%20results/whisper/Wav2Vec2-large-xlsr-hindi |
 | | vakyansh-wav2vec2-hindi-him-4200 | 9.82 | 4.63 | https://github.com/diptiman-mohanta/Text-Normalization-for-Automatic-Speech-Recognition/tree/main/detailed%20Normalization%20results/whisper/vakyansh |
+
+# Date: 04 Nov 2025
+
+## Neural Text Normalization for Turkish Social Media
+- Authores Sinon Goker, Burcu Can
+- Applied two approaches for Turkish text normalization: context normalization approach using distributed representation of words and seq2seq normalization approach using neural encoder-decoder models.
+
+### Introduction
+-  In this they introduced methods that are different from conventional methods so that the proposed methods results in more accurarte outputs as being more senstive to chnages in error pattern due to normalizing over distributed representation of words and also normalizing over orthographiv pattern  that are captured automatically by an encoder decoder neutral network architecture.
+-  Word representation are learned through the contextual similarities between words as suggest by firth.
+-  Each word is represented by a feature vector that bears any lexical, semantic, syntactuc feature of the word in the vector space.
+-  Therefore similar words tends to have similar words tend to have similar word representations and they will be closer to each other in the vector space.
+-  they use word2vec to learn the neural word representations that is a prediction based model that learns the word representations using the contextual infromation of each word without counting the coocurrances. Therefore words in similar context have similar word representation.
+-  as the second normalization approach, we present an encoder decoder model to learn the wrror rule automatically. Encoder decoder architecture using recurrent neural network is mainly used for seq2seq learning tasks such as machine translation, text summerization. The encoder network takes a sequence input and output the encoder input which is represented by feature vector. once the input is encoded, it is given as input to the decoder network that transforms/ decodes the encoded input into the acutal input or the intended input.
+-  Here a fixed length internal feature vector is learned, which represents the structural relation between the input and output.
+-  Therefore, the transformation from source to target is performed in a rule independent way from source target is performed in rule independent way for further prediction with the new input data.
+
+
+### Related Work:
+- Hasan and Menezes utilize both contextual and lexical features. They used Random walks on a bipartite graph that is built based on the contexts and another set corresponds to noisy and canonical words. A normalization lexicon is generated through Random Walks on the bipartute graph. The most suitable candidate words are chosen according to the longest common subsequnece and edit distance.
+- Sonmez and Ozgur introduced another graph based method uses gramatical features in additon to contextual and lexical features. The contextual and grammatical features are encoded in a graph, where the relative postions of words and their part of speech tag is encoded.
+- Sridhar introduced antoher unsupervised text normalization algorithm that makes of distributional featires of words and phrases. Unlike the previous work, contextual features are learned via neural word embedding by using the continuous bag of word model of word2vecand the neural network architecture.
+- A lexicon consists of noisy and canonical word pair is consturcted by making use of the distance between neural word embeddings and by filtering out same fo the candidate to find the best canonical candidate for each word.
+- Yang and Eisenstein propose a log-linear model that scores sources and target string in an unsupervised framework. A language model is combined with the log-linear model to compute the parameters of the model only for the observed n-grams while doing gradient-based updates.
+- Ikeda, Shindo, and Matsumoto introduced a character based neural encoder-deocder model for japanese text normalization, RNN based GRU neural networks are used for the encoder and decoder architecture.
+- Sutskever, Vinyals and Le proposed a method by using deep recurrent neural network for the machine translation task as a seq2seq learning problem. This uses a LSTM to map each source sentence to target sentence in another language.
+
+### Methodology
+Two different approch us used for text normalization:
+
+#### Contextual Normalization Approach:
+- Contextual normalization approach is perfromed by using distributed representation of noisy words.
+- For the distributed representation they have used the neural word embedding.
+- Learing the distributed representation of the social media text is the first approach. The main idea is to represent the words as a feature vector that bears lexical, semantic and synthetic feature, that is called as embedding.
+- Here the CBOW (continious Bag-of-Words) approach of word2vec is used to learn the word representations.In this architecture, the bag of surrounding word representations of word occuring in similar contexts tends to be alos similar at the end of the training.
+- As a result, a vector space is created for the social media text where each word is represented by a word embedding.
+- used a corpus of manually collected news that consists of 184 million words to generate the lexicon.
+- once they selected 2 million canonical word types by finding each unique word in the new archive, they retrive the nearest n<sup>2</sup> neighbours of each canonicala word by using the pretrained word embeddings.
+- To this end they used the cosine similarity between two words embedding u and v.
+- 43 million unique cannonical-noisy word pairs are gathered that will be used as lexicon. Those pairs are swapped as noisy canonical pairs. Finally, lexical similarity cost between two word w<sub>1</sub> and w<sub>2</sub> is calculated.
+- In this study consonant skeleton structure is used to select a more significant letter sequence that can express the noisy word.
+- 
